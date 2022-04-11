@@ -7950,14 +7950,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1746180593}
     m_Modifications:
-    - target: {fileID: 487671108, guid: 2f33b15ed0bc1f8479d400df37e96a8a, type: 3}
-      propertyPath: localMinPos
-      value: -0.135
-      objectReference: {fileID: 0}
-    - target: {fileID: 7764344877847131743, guid: 2f33b15ed0bc1f8479d400df37e96a8a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.135
-      objectReference: {fileID: 0}
     - target: {fileID: 8626316349109237121, guid: 2f33b15ed0bc1f8479d400df37e96a8a, type: 3}
       propertyPath: m_Name
       value: Half_Donut
