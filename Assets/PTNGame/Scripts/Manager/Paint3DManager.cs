@@ -63,7 +63,7 @@ public class Paint3DManager : MonoBehaviour
     private bool GetWallPosFromWorldPos(ref Vector3 uvWorldPosition)
     {
         //TODO: change input mouse pos to touch pos
-#if UNITY_EDITOR || UNITY_EDITOR_WIN
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || UNITY_WEBGL
         Ray cursorRay = sceneCamera.ScreenPointToRay(Input.mousePosition);
 #else
     Ray cursorRay = sceneCamera.ScreenPointToRay(Input.mousePosition);

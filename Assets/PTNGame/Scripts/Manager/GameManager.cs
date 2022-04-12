@@ -13,7 +13,18 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         StartNextLevel();
+        Screen.SetResolution(2960, 1440, true);
     }
+
+    
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || UNITY_WEBGL
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
+    }
+#endif
+
 
     protected internal void StartNextLevel()
     {
