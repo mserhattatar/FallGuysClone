@@ -1,37 +1,50 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class LevelRanking
 {
-    private Transform[] characters;
+    private readonly List<(string, int)> finalRank = new List<(string, int)>();
+    private List<Transform> gameRank;
+
     private readonly string playerName;
 
-    public (string[], bool) CharacterRanking => FindCharacterRanking();
+    public (string, int)[] CharacterRanking => FindCharacterRanking();
 
 
-    protected internal LevelRanking(Transform[] characters, string playerName)
+    protected internal LevelRanking(IEnumerable<Transform> characters, string playerName)
     {
-        this.characters = characters;
         this.playerName = playerName;
+        gameRank = characters.ToList();
     }
 
-    private (string[], bool) FindCharacterRanking()
+    private (string, int)[] FindCharacterRanking()
     {
-        var result = new string[characters.Length];
-        var isPlayerInThree = false;
+        gameRank = gameRank.OrderByDescending(c => c.transform.position.z).ToList();
 
-        characters = characters.OrderByDescending(character => character.position.z).ToArray();
+        var findFinishedCharacter = gameRank.Where(character => !character.gameObject.activeInHierarchy)
+            .Where(c => c.transform.position.z > 30).ToArray();
 
-        for (var i = 0; i < characters.Length; i++)
+        foreach (var fTransform in findFinishedCharacter)
         {
-            result[i] = characters[i].name;
-
-            if (i <= 3 && result[i] == playerName)
-            {
-                isPlayerInThree = true;
-            }
+            gameRank.Remove(fTransform);
+            finalRank.Add((fTransform.gameObject.name, finalRank.Count + 1));
         }
 
-        return (result, isPlayerInThree);
+        var result = new List<(string, int)>(finalRank);
+
+        foreach (var character in gameRank)
+        {
+            result.Add((character.gameObject.name, result.Count + 1));
+        }
+
+        var player = result.Find(c => c.Item1 == playerName);
+
+        if (player.Item2 > 4)
+            result[3] = player;
+
+        var firstFourCharacter = result.Take(4).ToArray();
+
+        return firstFourCharacter;
     }
 }

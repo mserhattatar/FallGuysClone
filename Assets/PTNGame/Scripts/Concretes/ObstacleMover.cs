@@ -4,7 +4,7 @@ public class ObstacleMover : MonoBehaviour
 {
     [Header("Move")] [SerializeField] private MovePosEnum movePosE;
     [SerializeField] private float localMinPos, localMaxPos;
-    [SerializeField] [Range(0.01f, 2)] private float moveSpeed = 1f;
+    [SerializeField] [Range(0.01f, 20f)] private float moveSpeed = 1f;
     private float goPosValue;
 
     [Header("Rotate")] [SerializeField] private RotatePosEnum rotatePosE;
@@ -29,7 +29,7 @@ public class ObstacleMover : MonoBehaviour
 
     private void Rotator()
     {
-        if (rotatePosE == RotatePosEnum.DontRotate) return;
+        if (rotatePosE == RotatePosEnum.DoNotRotate) return;
 
         transform.Rotate(rotationPos, Time.deltaTime * rotationSpeed);
     }
@@ -58,7 +58,7 @@ public class ObstacleMover : MonoBehaviour
                 rotationPos = Vector3.back;
                 PlayerRotationPos = Vector3.right * rotationSpeed / 20;
                 break;
-            case RotatePosEnum.DontRotate:
+            case RotatePosEnum.DoNotRotate:
                 rotationPos = Vector3.right;
                 break;
             default:
@@ -73,7 +73,7 @@ public class ObstacleMover : MonoBehaviour
 
     private void Mover()
     {
-        if (movePosE == MovePosEnum.DontMove) return;
+        if (movePosE == MovePosEnum.DoNotMove) return;
 
         var position = transform.localPosition;
 
@@ -114,7 +114,7 @@ public class ObstacleMover : MonoBehaviour
 
 internal enum RotatePosEnum
 {
-    DontRotate,
+    DoNotRotate,
     X,
     Y,
     Z,
@@ -125,7 +125,7 @@ internal enum RotatePosEnum
 
 internal enum MovePosEnum
 {
-    DontMove,
+    DoNotMove,
     X,
     Y,
     Z

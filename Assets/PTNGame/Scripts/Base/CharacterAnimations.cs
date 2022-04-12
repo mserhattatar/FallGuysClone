@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class CharacterAnimations
@@ -16,7 +15,8 @@ public class CharacterAnimations
 
     protected internal void SetRun(float runSpeed)
     {
-        if (runSpeed == lastRunSpeed) return;
+        if (runSpeed == lastRunSpeed)
+            return;
         lastRunSpeed = runSpeed;
         cAnimator.SetFloat(RunSpeed, runSpeed);
     }

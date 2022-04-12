@@ -15,6 +15,7 @@ TagManager:
   - AddForceObstacle
   - SpawnObstacle
   - Rotator
+  - FinishLine
   layers:
   - Default
   - TransparentFX

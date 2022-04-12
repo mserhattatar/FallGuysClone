@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/PTNGame/Scenes/Main.unity
+    guid: 6243f06bf68951741b868bc3e5a4b2b5
+  - enabled: 1
+    path: Assets/PTNGame/Scenes/Level2.unity
+    guid: f966d0d8983c56143b911229f0aa3078
   m_configObjects: {}
