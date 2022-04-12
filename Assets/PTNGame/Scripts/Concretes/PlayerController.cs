@@ -12,7 +12,7 @@ public class PlayerController : Character
 
     private void FixedUpdate()
     {
-        if (!Move) return;
+        if (!canMove) return;
 
         transform.Translate(Vector3.forward * Time.deltaTime * Speed * joystick.Vertical);
         transform.Rotate(Vector3.up, Time.deltaTime * RotationSpeed * joystick.Horizontal);
@@ -23,7 +23,7 @@ public class PlayerController : Character
         return joystick.Vertical != 0 ? Math.Abs(joystick.Vertical) : Math.Abs(joystick.Horizontal);
     }
 
-    protected override void CollisionFinisLine()
+    protected override void OnFinishLine()
     {
         GameManager.FinisLineAction?.Invoke();
     }

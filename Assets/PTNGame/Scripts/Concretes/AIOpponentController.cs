@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class AIOpponentController : Character
 {
     private NavMeshAgent agent;
@@ -18,41 +20,57 @@ public class AIOpponentController : Character
     protected override float SetRunAniSpeed() => Math.Abs(agent.velocity.normalized.magnitude);
 
 
-    protected override void SetAgent(bool active)
+    private void SetAgent(bool active)
     {
-        if (agent.enabled == active)
-            return;
+        //if (agent.enabled == active)
+        // return;
+
+        Debug.Log(gameObject.name + "  =  SetAgent = " + active);
 
         if (active)
-        {
             StartCoroutine(SetAgentDestination());
-        }
         else
-        {
-            if (!agent.isOnNavMesh)
-                return;
-            agent.ResetPath();
-            agent.isStopped = true;
             agent.enabled = false;
-        }
     }
 
     private IEnumerator SetAgentDestination()
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitUntil(() => canMove);
+
+        Debug.Log(gameObject.name + "  =  SetAgentDestination =   canMove" + canMove);
+
+        yield return new WaitForSeconds(0.5f);
         agent.enabled = true;
-
-        if (!agent.isOnNavMesh)
-        {
-            StartCoroutine(SpawnCharacter());
-            yield break;
-        }
-
-        agent.isStopped = false;
+        Debug.Log(gameObject.name + "  =  SetDestination ");
         agent.SetDestination(finishPos);
     }
 
-    protected override void CollisionFinisLine()
+    //Test
+
+    void OnEnable()
+    {
+        Application.logMessageReceived += HandleLog;
+    }
+
+
+    void HandleLog(string logString, string stackTrace, LogType type)
+    {
+        if (type == LogType.Error || type == LogType.Warning)
+            EditorApplication.isPaused = true;
+    }
+
+    //test
+
+
+    protected override void CharacterFalling() => SetAgent(false);
+
+    protected override void OnSpawnObstacle() => SetAgent(false);
+
+    protected override void OnAddForceObstacle() => SetAgent(false);
+
+    protected override void StandingUpAniFinished() => SetAgent(true);
+
+    protected override void OnFinishLine()
     {
         SetAgent(false);
         gameObject.SetActive(false);

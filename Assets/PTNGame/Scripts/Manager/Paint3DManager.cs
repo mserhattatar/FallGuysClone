@@ -52,6 +52,7 @@ public class Paint3DManager : MonoBehaviour
 
 
     // Returns the position on the texuremap according to a hit in the mesh collider
+    //TODO: input u degistir touchpos
     private bool HitTestUVPosition(ref Vector3 uvWorldPosition)
     {
         Ray cursorRay = sceneCamera.ScreenPointToRay(Input.mousePosition);

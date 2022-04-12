@@ -6,6 +6,7 @@ public class CharacterAnimations
     private static readonly int RunSpeed = Animator.StringToHash("RunSpeed");
     private static readonly int Falling = Animator.StringToHash("Falling");
     private static readonly int FallingDown = Animator.StringToHash("FallingDown");
+    private static readonly int StandingUp = Animator.StringToHash("StandingUp");
     private float lastRunSpeed;
 
     protected internal CharacterAnimations(Animator pAnimator)
@@ -29,5 +30,10 @@ public class CharacterAnimations
     protected internal void SetFallingDown(bool fallingDown)
     {
         cAnimator.SetBool(FallingDown, fallingDown);
+    }
+
+    protected internal void SetStandingUp(bool standing)
+    {
+        cAnimator.SetBool(StandingUp, standing);
     }
 }
