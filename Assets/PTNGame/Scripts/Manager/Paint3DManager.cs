@@ -1,16 +1,20 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Paint3DManager : MonoBehaviour
 {
+    private bool startPaining;
+    private List<Transform> createdBrushesList = new List<Transform>();
+
     // The camera that looks at the model, and the camera that looks at the canvas.
     [SerializeField] private Camera sceneCamera, canvasCam;
 
     [SerializeField] private GameObject brushContainer, objectToPainted;
-    private bool startPaining;
 
-    private void OnEnable() => GameManager.FinisLineAction += FinishLinePaint;
 
-    private void OnDisable() => GameManager.FinisLineAction -= FinishLinePaint;
+    private void OnEnable() => GameManager.FinisLineAction += StartFinishWallPaint;
+
+    private void OnDisable() => GameManager.FinisLineAction -= StartFinishWallPaint;
 
     private void LateUpdate()
     {
@@ -18,7 +22,7 @@ public class Paint3DManager : MonoBehaviour
             PaintWall();
     }
 
-    private void FinishLinePaint()
+    private void StartFinishWallPaint()
     {
         objectToPainted.SetActive(true);
         startPaining = true;
@@ -29,18 +33,19 @@ public class Paint3DManager : MonoBehaviour
     private void PaintWall()
     {
         var uvWorldPosition = Vector3.zero;
-        if (HitTestUVPosition(ref uvWorldPosition))
+        if (GetWallPosFromWorldPos(ref uvWorldPosition))
         {
+            //TODO:create object pool 
             var brushObj = (GameObject) Instantiate(
                 Resources.Load("BrushEntity"), brushContainer.transform, true);
             // The position of the brush (in the UVMap)
             brushObj.transform.localPosition = uvWorldPosition;
+            createdBrushesList.Add(brushObj.transform);
         }
 
-        var brushes = brushContainer.GetComponentsInChildren<Transform>();
-
-        if (brushes.Length <= 100)
+        if (createdBrushesList.Count <= 500)
             return;
+
         foreach (var brush in brushContainer.GetComponentsInChildren<Transform>())
         {
             if (brush.gameObject.GetInstanceID() != brushContainer.GetInstanceID())
@@ -48,19 +53,27 @@ public class Paint3DManager : MonoBehaviour
                 Destroy(brush.gameObject);
             }
         }
+
+        GameManager.Instance.StartNextLevel();
     }
 
 
     // Returns the position on the texuremap according to a hit in the mesh collider
-    //TODO: input u degistir touchpos
-    private bool HitTestUVPosition(ref Vector3 uvWorldPosition)
+
+    private bool GetWallPosFromWorldPos(ref Vector3 uvWorldPosition)
     {
+        //TODO: change input mouse pos to touch pos
+#if UNITY_EDITOR || UNITY_EDITOR_WIN
         Ray cursorRay = sceneCamera.ScreenPointToRay(Input.mousePosition);
+#else
+    Ray cursorRay = sceneCamera.ScreenPointToRay(Input.mousePosition);
+#endif
+
 
         if (!Physics.Raycast(cursorRay, out var hit, 200f))
             return false;
 
-        if (hit.collider == null && !hit.collider.CompareTag("FinishWall"))
+        if (hit.collider == null || !hit.collider.gameObject.CompareTag("FinishWall"))
             return false;
 
         MeshCollider meshCollider = hit.collider as MeshCollider;

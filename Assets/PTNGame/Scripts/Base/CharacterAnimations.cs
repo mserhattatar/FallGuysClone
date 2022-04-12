@@ -16,22 +16,32 @@ public class CharacterAnimations
 
     protected internal void SetRun(float runSpeed)
     {
+        //dont use system tolerance or int
         if (runSpeed == lastRunSpeed)
             return;
         lastRunSpeed = runSpeed;
         cAnimator.SetFloat(RunSpeed, runSpeed);
     }
 
+    /// <summary>
+    /// Fall in to the space from ground
+    /// </summary>
     protected internal void SetFalling(bool falling)
     {
         cAnimator.SetBool(Falling, falling);
     }
 
+    /// <summary>
+    /// fall in to the ground after hitting obstacles
+    /// </summary>
     protected internal void SetFallingDown(bool fallingDown)
     {
         cAnimator.SetBool(FallingDown, fallingDown);
     }
 
+    /// <summary>
+    /// stand up after falling to space or falling down
+    /// </summary>
     protected internal void SetStandingUp(bool standing)
     {
         cAnimator.SetBool(StandingUp, standing);

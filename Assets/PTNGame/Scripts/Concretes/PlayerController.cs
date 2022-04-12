@@ -12,7 +12,8 @@ public class PlayerController : Character
 
     private void FixedUpdate()
     {
-        if (!canMove) return;
+        if (!CanMove)
+            return;
 
         transform.Translate(Vector3.forward * Time.deltaTime * Speed * joystick.Vertical);
         transform.Rotate(Vector3.up, Time.deltaTime * RotationSpeed * joystick.Horizontal);

@@ -12,10 +12,10 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-        NextLevel();
+        StartNextLevel();
     }
 
-    private void NextLevel()
+    protected internal void StartNextLevel()
     {
         StartCoroutine(LoadYourAsyncScene());
     }

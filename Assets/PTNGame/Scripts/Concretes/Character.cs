@@ -9,8 +9,10 @@ public class Character : MonoBehaviour
     private Rigidbody rb;
 
     private Vector3 spawnPos;
-    [SerializeField] private bool isSpawning;
-    [SerializeField] protected bool canMove;
+    private bool isSpawning;
+
+    protected bool IsFalling;
+    protected bool CanMove;
     protected float ObstacleForce = 2000f;
     private float RunAniSpeed => SetRunAniSpeed();
 
@@ -19,7 +21,8 @@ public class Character : MonoBehaviour
     protected void Init()
     {
         isSpawning = true;
-        canMove = false;
+        CanMove = false;
+
         rb = GetComponent<Rigidbody>();
         characterAnimations = new CharacterAnimations(GetComponent<Animator>());
 
@@ -30,26 +33,33 @@ public class Character : MonoBehaviour
     {
         characterAnimations.SetRun(RunAniSpeed);
 
-        if (!isSpawning && transform.position.y < -2f)
-            StartCoroutine(SpawnCharacter());
+
+        if (!IsFalling && transform.position.y < 0)
+            IsFalling = true;
+        else if (IsFalling && transform.position.y >= 0)
+        {
+            IsFalling = false;
+        }
+
+        if (IsFalling && !isSpawning && transform.position.y < -10f)
+        {
+            isSpawning = true;
+            StartCoroutine(StartCharacterSpawning());
+        }
     }
 
 
-    private IEnumerator SpawnCharacter()
+    private IEnumerator StartCharacterSpawning()
     {
-        Debug.Log(gameObject.name + "  =  started character Spawn prosedur because of its y position");
-        CharacterFalling();
-        canMove = false;
-        isSpawning = true;
+        OnCharacterSpawning();
+        CanMove = false;
         characterAnimations.SetFalling(true);
 
         yield return new WaitForSeconds(1f);
-        Debug.Log(gameObject.name + "  =  characterSpawned in spawnden");
+
         rb.velocity = Vector3.zero;
         transform.position = spawnPos;
-        isSpawning = false;
     }
-
 
     private void SetSpawnPos(int posZ)
     {
@@ -58,22 +68,20 @@ public class Character : MonoBehaviour
         spawnPos = new Vector3(0, 25f, posZ);
     }
 
-    //for standing up animation event
+    // for standing up animation event
     protected internal void StandingAniFinished()
     {
-        Debug.Log(gameObject.name + "  =  StandingAniFinished");
         characterAnimations.SetStandingUp(false);
-        canMove = true;
+
 
         StandingUpAniFinished();
     }
 
-    //for Falling Down animation event
+    // for falling down animation event
     protected internal void FallingDownAniFinished()
     {
-        Debug.Log(gameObject.name + "  =  FallingDownAniFinished");
         characterAnimations.SetFallingDown(false);
-        
+
         characterAnimations.SetStandingUp(true);
     }
 
@@ -84,7 +92,6 @@ public class Character : MonoBehaviour
     {
         if (collisionInfo.gameObject.CompareTag("RotatingPlatform"))
         {
-            Debug.Log(gameObject.name + "  = OnCollisionStay RotatingPlatform");
             OnRotatingPlatform();
 
             var turnPos = collisionInfo.gameObject.GetComponent<ObstacleMover>().PlayerRotationPos;
@@ -94,89 +101,110 @@ public class Character : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (canMove && other.gameObject.CompareTag("SpawnPoint"))
+        if (CanMove && other.gameObject.CompareTag("SpawnPoint"))
         {
-            Debug.Log(gameObject.name + "  = Collision RotatingPlatform");
-
-            OnSpawnPointSave();
+            OnSpawnPoint();
 
             SetSpawnPos((int) other.transform.position.z);
         }
 
-
-        if (canMove && other.gameObject.CompareTag("FinishLine"))
+        if (CanMove && other.gameObject.CompareTag("FinishLine"))
         {
-            Debug.Log(gameObject.name + "  = Collision RotatingPlatform");
-
             OnFinishLine();
 
-            canMove = false;
+            CanMove = false;
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (canMove &&
+        if (CanMove &&
             (collision.gameObject.CompareTag("AddForceObstacle") || collision.gameObject.CompareTag("Player")))
         {
-            Debug.Log(gameObject.name + "  = Collision AddForceObstacle or Player ");
-
             OnAddForceObstacle();
 
-            canMove = false;
+            CanMove = false;
             characterAnimations.SetFallingDown(true);
             rb.AddExplosionForce(ObstacleForce, collision.transform.position, 360, 0.2f);
         }
 
-        if (canMove && collision.gameObject.CompareTag("SpawnObstacle"))
+        if (CanMove && collision.gameObject.CompareTag("SpawnObstacle"))
         {
-            Debug.Log(gameObject.name + "  = Collision SpawnObstacle");
-
             OnSpawnObstacle();
 
-            canMove = false;
+            CanMove = false;
             characterAnimations.SetFalling(true);
             transform.position = spawnPos;
         }
 
-        if (isSpawning && !canMove && collision.gameObject.CompareTag("Platform"))
+        if (isSpawning && !CanMove && collision.gameObject.CompareTag("Platform"))
         {
-            Debug.Log(gameObject.name + "  = Collision Platform");
-
+            isSpawning = false;
             OnPlatform();
+            characterAnimations.SetFalling(false);
+            characterAnimations.SetFallingDown(false);
             characterAnimations.SetStandingUp(true);
         }
     }
 
+    #endregion
+
+    #region Override Methods
+
+    /// <summary>
+    /// This function runs when standing up animation finished
+    /// </summary>
     protected virtual void StandingUpAniFinished()
     {
+        CanMove = true;
     }
 
-    protected virtual void CharacterFalling()
+    /// <summary>
+    /// This function runs when character is spawning from air
+    /// </summary>
+    protected virtual void OnCharacterSpawning()
     {
     }
 
+    /// <summary>
+    /// This function runs when character is on finish line
+    /// </summary>
     protected virtual void OnFinishLine()
     {
     }
 
-    protected virtual void OnSpawnPointSave()
-    {
-    }
-
-    protected virtual void OnPlatform()
-    {
-    }
-
-    protected virtual void OnRotatingPlatform()
-    {
-    }
-
+    /// <summary>
+    /// This function runs when character hit spawn obstacle
+    /// </summary>
     protected virtual void OnSpawnObstacle()
     {
     }
 
+    /// <summary>
+    /// This function runs when character hit AddForce obstacle
+    /// </summary>
     protected virtual void OnAddForceObstacle()
+    {
+    }
+
+    /// <summary>
+    /// This function runs when character hit spawn point(position) object
+    /// </summary>
+    protected virtual void OnSpawnPoint()
+    {
+    }
+
+    /// <summary>
+    /// This function runs when character hit the platform first time after spawning
+    /// </summary>
+    protected virtual void OnPlatform()
+    {
+    }
+
+    /// <summary>
+    /// This function runs during character  is on rotating platform
+    /// </summary>
+    protected virtual void OnRotatingPlatform()
     {
     }
 

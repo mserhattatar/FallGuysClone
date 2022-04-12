@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,25 +7,19 @@ using UnityEngine.AI;
 public class AIOpponentController : Character
 {
     private NavMeshAgent agent;
-    private readonly Vector3 finishPos = new Vector3(0, 0, 50f);
+    private readonly Vector3 finishDestinationPos = new Vector3(0, 0, 50f);
 
     private void Awake()
     {
         Init();
+
         agent = GetComponent<NavMeshAgent>();
         ObstacleForce = 3000f;
     }
 
-    protected override float SetRunAniSpeed() => Math.Abs(agent.velocity.normalized.magnitude);
-
 
     private void SetAgent(bool active)
     {
-        //if (agent.enabled == active)
-        // return;
-
-        Debug.Log(gameObject.name + "  =  SetAgent = " + active);
-
         if (active)
             StartCoroutine(SetAgentDestination());
         else
@@ -35,34 +28,23 @@ public class AIOpponentController : Character
 
     private IEnumerator SetAgentDestination()
     {
-        yield return new WaitUntil(() => canMove);
+        yield return new WaitWhile(() => CanMove);
+        yield return new WaitForSeconds(1f);
 
-        Debug.Log(gameObject.name + "  =  SetAgentDestination =   canMove" + canMove);
+        if (IsFalling)
+        {
+            CanMove = false;
+            yield break;
+        }
 
-        yield return new WaitForSeconds(0.5f);
+        CanMove = true;
         agent.enabled = true;
-        Debug.Log(gameObject.name + "  =  SetDestination ");
-        agent.SetDestination(finishPos);
+        agent.SetDestination(finishDestinationPos);
     }
 
-    //Test
+    protected override float SetRunAniSpeed() => Math.Abs(agent.velocity.normalized.magnitude);
 
-    void OnEnable()
-    {
-        Application.logMessageReceived += HandleLog;
-    }
-
-
-    void HandleLog(string logString, string stackTrace, LogType type)
-    {
-        if (type == LogType.Error || type == LogType.Warning)
-            EditorApplication.isPaused = true;
-    }
-
-    //test
-
-
-    protected override void CharacterFalling() => SetAgent(false);
+    protected override void OnCharacterSpawning() => SetAgent(false);
 
     protected override void OnSpawnObstacle() => SetAgent(false);
 
