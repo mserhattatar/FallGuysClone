@@ -16,7 +16,7 @@ public class GameManager : Singleton<GameManager>
         Screen.SetResolution(2960, 1440, true);
     }
 
-    
+
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || UNITY_WEBGL
     private void Update()
     {
@@ -34,10 +34,11 @@ public class GameManager : Singleton<GameManager>
     private IEnumerator LoadYourAsyncScene()
     {
         int activeScene = SceneManager.GetActiveScene().buildIndex;
-        int nextScene = 1;
-        if (SceneManager.sceneCountInBuildSettings == activeScene)
-            nextScene = activeScene + 1;
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(nextScene);
+        activeScene ++;
+        if (activeScene == SceneManager.sceneCountInBuildSettings)
+            activeScene = 1;
+       
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(activeScene);
 
         // Wait until the asynchronous scene fully loads
         yield return new WaitUntil(() => asyncLoad.isDone);
