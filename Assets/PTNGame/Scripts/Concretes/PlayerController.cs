@@ -6,7 +6,7 @@ public class PlayerController : Character
     [SerializeField] private Joystick joystick;
 
     private const float Speed = 5;
-    private const float RotationSpeed = 100;
+    private const float RotationSpeed = 120;
 
     private void Awake() => Init();
 
