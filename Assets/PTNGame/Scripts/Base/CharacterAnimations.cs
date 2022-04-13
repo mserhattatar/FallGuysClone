@@ -29,6 +29,7 @@ public class CharacterAnimations
     protected internal void SetFalling(bool falling)
     {
         cAnimator.SetBool(Falling, falling);
+        SetStandingUp(!falling);
     }
 
     /// <summary>

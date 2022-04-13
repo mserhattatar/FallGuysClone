@@ -33,7 +33,6 @@ public class Character : MonoBehaviour
     {
         characterAnimations.SetRun(RunAniSpeed);
 
-
         if (!IsFalling && transform.position.y < 0)
             IsFalling = true;
         else if (IsFalling && transform.position.y >= 0)
@@ -42,16 +41,16 @@ public class Character : MonoBehaviour
         }
 
         if (IsFalling && !isSpawning && transform.position.y < -10f)
-        {
-            isSpawning = true;
             StartCoroutine(StartCharacterSpawning());
-        }
     }
 
 
     private IEnumerator StartCharacterSpawning()
     {
+        isSpawning = true;
+
         OnCharacterSpawning();
+
         CanMove = false;
         characterAnimations.SetFalling(true);
 
@@ -72,7 +71,6 @@ public class Character : MonoBehaviour
     protected internal void StandingAniFinished()
     {
         characterAnimations.SetStandingUp(false);
-
 
         StandingUpAniFinished();
     }
@@ -132,9 +130,7 @@ public class Character : MonoBehaviour
         {
             OnSpawnObstacle();
 
-            CanMove = false;
-            characterAnimations.SetFalling(true);
-            transform.position = spawnPos;
+            StartCoroutine(StartCharacterSpawning());
         }
 
         if (isSpawning && !CanMove && collision.gameObject.CompareTag("Platform"))
