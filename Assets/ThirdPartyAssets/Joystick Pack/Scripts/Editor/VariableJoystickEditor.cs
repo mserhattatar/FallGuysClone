@@ -1,37 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using ThirdPartyAssets.Joystick_Pack.Scripts.Joysticks;
+using UnityEditor;
 using UnityEngine;
 
-using UnityEditor;
-
-[CustomEditor(typeof(VariableJoystick))]
-public class VariableJoystickEditor : JoystickEditor
+namespace ThirdPartyAssets.Joystick_Pack.Scripts.Editor
 {
-    private SerializedProperty moveThreshold;
-    private SerializedProperty joystickType;
-
-    protected override void OnEnable()
+    [CustomEditor(typeof(VariableJoystick))]
+    public class VariableJoystickEditor : JoystickEditor
     {
-        base.OnEnable();
-        moveThreshold = serializedObject.FindProperty("moveThreshold");
-        joystickType = serializedObject.FindProperty("joystickType");
-    }
+        private SerializedProperty joystickType;
+        private SerializedProperty moveThreshold;
 
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-
-        if (background != null)
+        protected override void OnEnable()
         {
-            RectTransform backgroundRect = (RectTransform)background.objectReferenceValue;
-            backgroundRect.pivot = center;
+            base.OnEnable();
+            moveThreshold = serializedObject.FindProperty("moveThreshold");
+            joystickType = serializedObject.FindProperty("joystickType");
         }
-    }
 
-    protected override void DrawValues()
-    {
-        base.DrawValues();
-        EditorGUILayout.PropertyField(moveThreshold, new GUIContent("Move Threshold", "The distance away from the center input has to be before the joystick begins to move."));
-        EditorGUILayout.PropertyField(joystickType, new GUIContent("Joystick Type", "The type of joystick the variable joystick is current using."));
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            if (background != null)
+            {
+                var backgroundRect = (RectTransform)background.objectReferenceValue;
+                backgroundRect.pivot = center;
+            }
+        }
+
+        protected override void DrawValues()
+        {
+            base.DrawValues();
+            EditorGUILayout.PropertyField(moveThreshold,
+                new GUIContent("Move Threshold",
+                    "The distance away from the center input has to be before the joystick begins to move."));
+            EditorGUILayout.PropertyField(joystickType,
+                new GUIContent("Joystick Type", "The type of joystick the variable joystick is current using."));
+        }
     }
 }
