@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &573848867240250712
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2780577628983202950}
+  - component: {fileID: 2842215607656790770}
+  m_Layer: 0
+  m_Name: TimeLine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2780577628983202950
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573848867240250712}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.336071, y: 12.079792, z: 45.25725}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!320 &2842215607656790770
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573848867240250712}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 245ec5ccc7fe8cb45ab7b8b1e5970d80, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -3537070630158569797, guid: 245ec5ccc7fe8cb45ab7b8b1e5970d80, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 2087954629021213151, guid: 245ec5ccc7fe8cb45ab7b8b1e5970d80, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 4526794566425198456, guid: 245ec5ccc7fe8cb45ab7b8b1e5970d80, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 2446499577361432513, guid: 245ec5ccc7fe8cb45ab7b8b1e5970d80, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 1351966538365992358, guid: 245ec5ccc7fe8cb45ab7b8b1e5970d80, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -3020061294951299321, guid: 245ec5ccc7fe8cb45ab7b8b1e5970d80, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 0}
+    value: {fileID: 0}
+  - key: {fileID: 0}
+    value: {fileID: 0}
+  m_ExposedReferences:
+    m_References:
+    - 09be0a09e9645ea419a41ebd8f355498: {fileID: 0}
+    - cd415e8c93f08484490d581f86a42f3d: {fileID: 0}
+    - 67892355a7cab49448d9a72ea91c77df: {fileID: 0}
+    - 90b88c34c403a6145b39881be8a450d4: {fileID: 0}
+    - e8c12e38031f0aa42ba8fdee08df57cf: {fileID: 0}

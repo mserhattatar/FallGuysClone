@@ -1,24 +1,12 @@
-using System;
-using System.Collections;
-using Game.Scripts.Patern;
+using Game.Scripts.Container;
+using Game.Scripts.Controller;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Game.Scripts.Manager
 {
-    public class GameManager : Singleton<GameManager>
+    public class GameManager : ComponentContainerBehaviour
     {
-        public static Action FinisLineAction;
-
-        [SerializeField] private GameObject loadingCanvas;
-
-
-        private void Start()
-        {
-            StartNextLevel();
-            Screen.SetResolution(2960, 1440, true);
-        }
-
+        private GameSceneManager _gameSceneManager;
 
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || UNITY_WEBGL
         private void Update()
@@ -28,27 +16,40 @@ namespace Game.Scripts.Manager
         }
 #endif
 
-
-        protected internal void StartNextLevel()
+        public override void ContainerOnAwake()
         {
-            StartCoroutine(LoadYourAsyncScene());
+            _gameSceneManager = MainContainer.GetContainerComponent(nameof(GameSceneManager)) as GameSceneManager;
         }
 
-        private IEnumerator LoadYourAsyncScene()
+        public override void ContainerDoAfterAwake()
         {
-            var activeScene = SceneManager.GetActiveScene().buildIndex;
-            activeScene++;
-            if (activeScene == SceneManager.sceneCountInBuildSettings)
-                activeScene = 1;
+            _gameSceneManager.LoadNextScene();
 
-            var asyncLoad = SceneManager.LoadSceneAsync(activeScene);
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || UNITY_WEBGL
+            Screen.SetResolution(2960, 1440, true);
+#endif
+        }
 
-            // Wait until the asynchronous scene fully loads
-            yield return new WaitUntil(() => asyncLoad.isDone);
+        protected override void RegisterEvents()
+        {
+            base.RegisterEvents();
+            FinishLineController.FinisLineAction += GameEnded;
+        }
 
-            //wait for shaders
-            //yield return new WaitForSeconds(1f);
-            loadingCanvas.SetActive(false);
+        protected override void UnRegisterEvents()
+        {
+            base.UnRegisterEvents();
+            FinishLineController.FinisLineAction -= GameEnded;
+        }
+
+        private void GameEnded(bool isSuccessful)
+        {
+            //TODO: add fail and success result canvas
+
+            if (isSuccessful)
+                _gameSceneManager.LoadNextScene();
+            else
+                _gameSceneManager.ReLoadScene();
         }
     }
 }
