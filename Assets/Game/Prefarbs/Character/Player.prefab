@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3647140144693652202}
   - component: {fileID: 3647140144693652203}
   - component: {fileID: 3647140144693652214}
-  - component: {fileID: 3647140144693652215}
   m_Layer: 12
   m_Name: Player
   m_TagString: Player
@@ -96,23 +95,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 346cf9b0f310fd64a90c42984a645139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joystick: {fileID: 0}
---- !u!208 &3647140144693652215
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3647140144693652208}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 0.11, y: 0.295, z: 0.11}
-  m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0.24, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!1 &3647140145073403591
 GameObject:
   m_ObjectHideFlags: 0

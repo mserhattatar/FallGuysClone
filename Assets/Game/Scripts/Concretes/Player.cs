@@ -1,6 +1,5 @@
 using System;
 using Game.Scripts.Base;
-using Game.Scripts.Manager;
 using ThirdPartyAssets.Joystick_Pack.Scripts.Base;
 using ThirdPartyAssets.Joystick_Pack.Scripts.Joysticks;
 using UnityEngine;
@@ -30,6 +29,10 @@ namespace Game.Scripts.Concretes
         public void SetPlayer(FloatingJoystick floatingJoystick)
         {
             _joystick = floatingJoystick;
+        }
+        protected override void OnFinishLine()
+        {
+            base.OnFinishLine();
         }
     }
 }

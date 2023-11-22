@@ -12,11 +12,10 @@ namespace Game.Scripts.Controller
     public class OpponentsController : ComponentContainerBehaviour
     {
         [SerializeField] private Transform[] startPoses;
-        private readonly List<AIOpponent> _aiOpponents = new();
         private LevelController _levelController;
 
         private PoolController _poolController;
-        public IEnumerable<Transform> GetAllCharacterTransform => _aiOpponents.Select(x => x.transform);
+        public List<AIOpponent> GetAllOpponents { get; } = new();
 
         public override void ContainerOnAwake()
         {
@@ -48,19 +47,19 @@ namespace Game.Scripts.Controller
         {
             var opNames = ConstantsVariables.Names.ToList();
             opNames.Shuffle();
-
+            var targetTransform = _levelController.TargetTransform;
             for (var i = 0; i < ConstantsVariables.OpponentCount; i++)
             {
                 var fromPool = _poolController.GetFromPool(PoolObjectType.EnemyCharacter, false) as AIOpponent;
-                fromPool!.CreateAgent(opNames[i], startPoses[i].position, 50);
+                fromPool!.CreateAgent(opNames[i], startPoses[i].position, targetTransform);
                 fromPool.transform.SetParent(transform);
-                _aiOpponents.Add(fromPool);
+                GetAllOpponents.Add(fromPool);
             }
         }
 
         private void StartPlayer()
         {
-            _aiOpponents.ForEach(x => x.gameObject.SetActive(true));
+            GetAllOpponents.ForEach(x => x.gameObject.SetActive(true));
         }
     }
 }

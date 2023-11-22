@@ -545,18 +545,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rankingBoard: {fileID: 670213659520509796}
-  allCharacters:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   rankingTexts:
   - {fileID: 670213660525852652}
   - {fileID: 670213659708308586}
@@ -579,7 +567,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &670213659520509797
 RectTransform:
   m_ObjectHideFlags: 0

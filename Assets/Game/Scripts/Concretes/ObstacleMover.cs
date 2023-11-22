@@ -6,10 +6,10 @@ namespace Game.Scripts.Concretes
     {
         [Header("Move")] [SerializeField] private MovePosEnum movePosE;
         [SerializeField] private float localMinPos, localMaxPos;
-        [SerializeField] [Range(0.01f, 20f)] private float moveSpeed = 1f;
+        [SerializeField] [Range(0f, 20f)] private float moveSpeed = 1f;
 
         [Header("Rotate")] [SerializeField] private RotatePosEnum rotatePosE;
-        [SerializeField] [Range(20f, 200f)] private float rotationSpeed = 20f;
+        [SerializeField] [Range(0f, 200f)] private float rotationSpeed = 00f;
         private float goPosValue;
         private Vector3 rotationPos;
 

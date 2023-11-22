@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using Game.Scripts.Base;
 using Game.Scripts.Container;
 using Game.Scripts.Controller;
 using Game.Scripts.Helpers;
@@ -15,21 +17,30 @@ namespace Game.Scripts.Manager
 
         private LevelRanking _levelRanking;
         private OpponentsController _opponentsController;
-
-        private void Start()
-        {
-            _levelRanking = new LevelRanking(_opponentsController.GetAllCharacterTransform,
-                ConstantsVariables.PlayerName);
-            _coroutineManager.HStopCoroutine("RankingRoutine");
-            _coroutineManager.HStartCoroutine("RankingRoutine", SetRankingTexts());
-        }
-
+        private PlayerController _playerController;
 
         public override void ContainerOnAwake()
         {
             _coroutineManager = MainContainer.GetContainerComponent(nameof(CoroutineManager)) as CoroutineManager;
             _opponentsController =
                 MainContainer.GetContainerComponent(nameof(OpponentsController)) as OpponentsController;
+            _playerController = MainContainer.GetContainerComponent(nameof(PlayerController)) as PlayerController;
+           
+            if (rankingBoard.activeSelf) rankingBoard.SetActive(false);
+        }
+
+        private void Start()
+        {
+            StartRankingRoutine();
+        }
+
+        private void StartRankingRoutine()
+        {
+            List<CharacterBase> opponents = _opponentsController.GetAllOpponents.ConvertAll(x=>x as CharacterBase);
+            opponents.Add(_playerController.GetPlayer);
+            _levelRanking = new LevelRanking(opponents, ConstantsVariables.PlayerName);
+            _coroutineManager.HStopCoroutine("RankingRoutine");
+            _coroutineManager.HStartCoroutine("RankingRoutine", SetRankingTexts());
         }
 
         public override void ContainerRemoving()
@@ -52,11 +63,11 @@ namespace Game.Scripts.Manager
 
         private IEnumerator SetRankingTexts()
         {
-            yield return new WaitUntil(() => rankingBoard.activeInHierarchy);
+            yield return new WaitWhile(() => rankingBoard.activeInHierarchy);
 
             while (rankingBoard.activeInHierarchy)
             {
-                var rankingCharacter = _levelRanking.CharacterRanking;
+                var rankingCharacter = _levelRanking.CharacterRanking();
 
                 for (var i = 0; i < 4; i++)
                 {

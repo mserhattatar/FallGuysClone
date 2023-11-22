@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using Game.Scripts.Base;
 
 namespace Game.Scripts
 {
@@ -9,27 +9,25 @@ namespace Game.Scripts
         private readonly List<(string, int)> _finalRank = new();
 
         private readonly string _playerName;
-        private List<Transform> _gameRank;
+        private readonly List<CharacterBase> _gameRank;
 
 
-        protected internal LevelRanking(IEnumerable<Transform> characters, string playerName)
+        protected internal LevelRanking(List<CharacterBase> characters, string playerName)
         {
             _playerName = playerName;
-            _gameRank = characters.ToList();
+            _gameRank = characters;
         }
 
-        public (string, int)[] CharacterRanking => FindCharacterRanking();
-
-        private (string, int)[] FindCharacterRanking()
+        public (string, int)[] CharacterRanking()
         {
-            _gameRank = _gameRank.OrderByDescending(c => c.transform.position.z).ToList();
+           var gameRank = _gameRank.OrderByDescending(c => c.transform.position.z).ToList();
 
-            var findFinishedCharacter = _gameRank.Where(character => !character.gameObject.activeInHierarchy)
+            var findFinishedCharacter = gameRank.Where(character => !character.gameObject.activeInHierarchy)
                 .Where(c => c.transform.position.z > 30).ToArray();
 
             foreach (var fTransform in findFinishedCharacter)
             {
-                _gameRank.Remove(fTransform);
+                gameRank.Remove(fTransform);
                 _finalRank.Add((fTransform.gameObject.name, _finalRank.Count + 1));
             }
 

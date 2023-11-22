@@ -23,7 +23,7 @@ namespace Game.Scripts.Manager
 
         private void SetThirdPersonCamera()
         {
-            var newPlayer = _playerController.PlayerTransform;
+            var newPlayer = _playerController.GetPlayer.transform;
             thirdPersonCamera.Follow = newPlayer;
             thirdPersonCamera.LookAt = newPlayer;
         }

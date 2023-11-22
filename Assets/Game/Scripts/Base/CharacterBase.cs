@@ -14,26 +14,26 @@ namespace Game.Scripts.Base
         private bool _isSpawning;
         private Rigidbody _rb;
         private Vector3 _spawnPos;
-        protected bool CanMove;
 
-        protected bool IsFalling;
+        private bool _ısFalling;
         protected float ObstacleForce = 2000f;
+        protected virtual bool CanMove { get; set; }
         private float RunAniSpeed => SetRunAniSpeed();
-
+        public string OpponentName { get; protected set; }
 
         private void LateUpdate()
         {
             _characterAnimations.SetRun(RunAniSpeed);
 
             var position = transform.position;
-            IsFalling = IsFalling switch
+            _ısFalling = _ısFalling switch
             {
                 false when position.y < 0 => true,
                 true when position.y >= 0 => false,
-                _ => IsFalling
+                _ => _ısFalling
             };
 
-            if (IsFalling && !_isSpawning && transform.position.y < -10f)
+            if (_ısFalling && !_isSpawning && transform.position.y < -10f)
                 StartCoroutine(StartCharacterSpawning());
         }
 
@@ -143,13 +143,6 @@ namespace Game.Scripts.Base
                 _rb.AddExplosionForce(ObstacleForce, collision.transform.position, 360, 0.2f);
             }
 
-            if (CanMove && collision.gameObject.CompareTag("SpawnObstacle"))
-            {
-                OnSpawnObstacle();
-
-                StartCoroutine(StartCharacterSpawning());
-            }
-
             if (_isSpawning && !CanMove && collision.gameObject.CompareTag("Platform"))
             {
                 _isSpawning = false;
@@ -183,13 +176,6 @@ namespace Game.Scripts.Base
         ///     This function runs when character is on finish line
         /// </summary>
         protected virtual void OnFinishLine()
-        {
-        }
-
-        /// <summary>
-        ///     This function runs when character hit spawn obstacle
-        /// </summary>
-        protected virtual void OnSpawnObstacle()
         {
         }
 

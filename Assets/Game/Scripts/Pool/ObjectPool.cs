@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Game.Scripts.Pool;
+using Game.Scripts.Manager;
 using UnityEngine;
 
-namespace Game.Scripts.Manager
+namespace Game.Scripts.Pool
 {
     public class ObjectPool
     {
@@ -40,7 +40,7 @@ namespace Game.Scripts.Manager
 
         public PooledObjectBehaviour GetPooledObject(bool activate)
         {
-            var pooledObj = _pooledObjects.FirstOrDefault(obj => !obj.IsInPool) ?? CreateObject();
+            var pooledObj = _pooledObjects.FirstOrDefault(obj => obj.IsInPool) ?? CreateObject();
 
             pooledObj.OnGetFromPool(activate);
 

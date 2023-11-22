@@ -9,11 +9,10 @@ namespace Game.Scripts.Controller
 {
     public class PlayerController : ComponentContainerBehaviour
     {
+        [SerializeField] private FloatingJoystick _floatingJoystick;
         private LevelController _levelController;
-        private Player _player;
         private PoolController _poolController;
-        [SerializeField] private  FloatingJoystick _floatingJoystick;
-        public Transform PlayerTransform => _player.transform;
+        public Player GetPlayer { get; private set; }
 
         public override void ContainerOnAwake()
         {
@@ -42,15 +41,15 @@ namespace Game.Scripts.Controller
 
         private void CreatePlayer()
         {
-            _player = _poolController.GetFromPool(PoolObjectType.PlayerCharacter, false) as Player;
-            _player!.transform.localPosition = Vector3.zero;
-            _player.transform.SetParent(transform);
-            _player.SetPlayer(_floatingJoystick);
+            GetPlayer = _poolController.GetFromPool(PoolObjectType.PlayerCharacter, false) as Player;
+            GetPlayer!.transform.localPosition = Vector3.zero;
+            GetPlayer.transform.SetParent(transform);
+            GetPlayer.SetPlayer(_floatingJoystick);
         }
 
         private void StartPlayer()
         {
-            _player.gameObject.SetActive(true);
+            GetPlayer.gameObject.SetActive(true);
         }
     }
 }

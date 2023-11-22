@@ -1,89 +1,48 @@
 using System;
-using System.Collections;
 using Game.Scripts.Base;
+using Pathfinding;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Game.Scripts.Concretes
 {
-    [RequireComponent(typeof(NavMeshAgent))]
     public class AIOpponent : CharacterBase
     {
-        private NavMeshAgent _agent;
+        [SerializeField] private AIDestinationSetter _aiDestinationSetter;
+        [SerializeField] private AIPath _aiPath;
+        private bool _canMove;
 
-        private Vector3 _finishDestinationPos;
-        public string OpponentName { get; private set; }
+        protected override bool CanMove
+        {
+            get => _canMove;
+
+            set
+            {
+                _canMove = value;
+                _aiPath.canMove = value;
+            }
+        }
 
         protected override void Init()
         {
             base.Init();
-            _agent = GetComponent<NavMeshAgent>();
             ObstacleForce = 3000f;
         }
 
-        public void CreateAgent(string agentName, Vector3 startPos, float destinationPos)
+        public void CreateAgent(string agentName, Vector3 startPos, Transform destinationTarget)
         {
             OpponentName = agentName;
             transform.position = startPos;
-            _finishDestinationPos = new Vector3(0, 0, destinationPos);
-        }
-
-        private void SetAgent(bool active)
-        {
-            //TODO: add routine controller
-            StopAllCoroutines();
-
-            if (active)
-                StartCoroutine(SetAgentDestination());
-            else
-                _agent.enabled = false;
-        }
-
-        private IEnumerator SetAgentDestination()
-        {
-            yield return new WaitWhile(() => CanMove);
-            yield return new WaitForSeconds(1f);
-
-            if (IsFalling)
-            {
-                CanMove = false;
-                yield break;
-            }
-
-            CanMove = true;
-            _agent.enabled = true;
-            yield return new WaitUntil(() => _agent.hasPath);
-            _agent.SetDestination(_finishDestinationPos);
+            _aiDestinationSetter.target = destinationTarget;
         }
 
         protected override float SetRunAniSpeed()
         {
-            return Math.Abs(_agent.velocity.normalized.magnitude);
-        }
-
-        protected override void OnCharacterSpawning()
-        {
-            SetAgent(false);
-        }
-
-        protected override void OnSpawnObstacle()
-        {
-            SetAgent(false);
-        }
-
-        protected override void OnAddForceObstacle()
-        {
-            SetAgent(false);
-        }
-
-        protected override void StandingUpAniFinished()
-        {
-            SetAgent(true);
+            return Math.Abs(_aiPath.velocity.normalized.magnitude);
         }
 
         protected override void OnFinishLine()
         {
-            SetAgent(false);
+            base.OnFinishLine();
             gameObject.SetActive(false);
         }
     }

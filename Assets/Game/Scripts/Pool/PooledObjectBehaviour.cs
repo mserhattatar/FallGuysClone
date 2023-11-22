@@ -7,15 +7,9 @@ namespace Game.Scripts.Pool
     {
         private ObjectPool _objectPool;
         private Transform _parentTransform;
-        public float FirstScale { get; private set; }
+        private float FirstScale { get; set; }
         public PoolObjectType PoolObjectType { get; private set; }
         public bool IsInPool { get; private set; }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            OnReleaseToPool();
-        }
 
         protected override void OnDestroy()
         {
@@ -41,14 +35,14 @@ namespace Game.Scripts.Pool
             (transform1 = transform).SetParent(_parentTransform);
             transform1.localScale = Vector3.one * FirstScale;
             IsInPool = true;
-            gameObject.SetActive(false);
+            if (gameObject.activeSelf) gameObject.SetActive(false);
         }
 
         // invoked when retrieving the next item from the object pool
         public void OnGetFromPool(bool activate)
         {
             IsInPool = false;
-            if (activate) gameObject.SetActive(true);
+            if (gameObject.activeSelf != activate) gameObject.SetActive(activate);
         }
 
         // invoked when we exceed the maximum number of pooled items (i.e. destroy the pooled object)
