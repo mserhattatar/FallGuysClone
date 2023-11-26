@@ -30,17 +30,9 @@ namespace Game.Scripts.Controller
             CreateOpponents();
         }
 
-        protected override void RegisterEvents()
+        public void StartGame()
         {
-            base.RegisterEvents();
-            _levelController.GameStarted += StartPlayer;
-        }
-
-
-        protected override void UnRegisterEvents()
-        {
-            base.UnRegisterEvents();
-            _levelController.GameStarted -= StartPlayer;
+            StartOpponents();
         }
 
         private void CreateOpponents()
@@ -51,15 +43,14 @@ namespace Game.Scripts.Controller
             for (var i = 0; i < ConstantsVariables.OpponentCount; i++)
             {
                 var fromPool = _poolController.GetFromPool(PoolObjectType.EnemyCharacter, false) as AIOpponent;
-                fromPool!.CreateAgent(opNames[i], startPoses[i].position, targetTransform);
-                fromPool.transform.SetParent(transform);
+                fromPool!.CreateAgent(opNames[i], startPoses[i].position, targetTransform, transform);
                 GetAllOpponents.Add(fromPool);
             }
         }
 
-        private void StartPlayer()
+        private void StartOpponents()
         {
-            GetAllOpponents.ForEach(x => x.gameObject.SetActive(true));
+            GetAllOpponents.ForEach(x => x.Activate());
         }
     }
 }

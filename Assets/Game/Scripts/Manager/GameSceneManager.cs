@@ -8,16 +8,8 @@ namespace Game.Scripts.Manager
 {
     public class GameSceneManager : ComponentContainerBehaviour
     {
-        private const string AsyncRoutineKey = "AsyncSceneLoadingRoutineKey";
-
-        private CoroutineManager _coroutineManager;
         public event Action SceneChangingDelegate;
         public event Action SceneChangedDelegate;
-
-        public override void ContainerOnAwake()
-        {
-            _coroutineManager = MainContainer.GetContainerComponent(nameof(CoroutineManager)) as CoroutineManager;
-        }
 
         public override void ContainerDoAfterAwake()
         {
@@ -41,8 +33,8 @@ namespace Game.Scripts.Manager
 
         private void LoadScene(int sceneIndex)
         {
-            _coroutineManager.HStopCoroutine(AsyncRoutineKey);
-            _coroutineManager.HStartCoroutine(AsyncRoutineKey, LoadYourAsyncScene(sceneIndex));
+            StopAllCoroutines();
+            StartCoroutine(LoadYourAsyncScene(sceneIndex));
         }
 
         private IEnumerator LoadYourAsyncScene(int sceneIndex)
@@ -55,7 +47,7 @@ namespace Game.Scripts.Manager
             yield return new WaitUntil(() => asyncLoad.isDone);
 
             SceneChangedDelegate?.Invoke();
-            _coroutineManager.HStopCoroutine(AsyncRoutineKey);
+            StopAllCoroutines();
         }
     }
 }

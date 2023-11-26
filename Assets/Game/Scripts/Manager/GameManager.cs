@@ -1,5 +1,4 @@
 using Game.Scripts.Container;
-using Game.Scripts.Controller;
 using UnityEngine;
 
 namespace Game.Scripts.Manager
@@ -30,16 +29,9 @@ namespace Game.Scripts.Manager
 #endif
         }
 
-        protected override void RegisterEvents()
+        public void LevelEnded()
         {
-            base.RegisterEvents();
-            FinishLineController.FinisLineAction += GameEnded;
-        }
-
-        protected override void UnRegisterEvents()
-        {
-            base.UnRegisterEvents();
-            FinishLineController.FinisLineAction -= GameEnded;
+            GameEnded(true);
         }
 
         private void GameEnded(bool isSuccessful)

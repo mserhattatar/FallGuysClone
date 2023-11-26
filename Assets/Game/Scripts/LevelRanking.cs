@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Game.Scripts.Base;
@@ -6,8 +7,6 @@ namespace Game.Scripts
 {
     public class LevelRanking
     {
-        private readonly List<(string, int)> _finalRank = new();
-
         private readonly string _playerName;
         private readonly List<CharacterBase> _gameRank;
 
@@ -18,31 +17,43 @@ namespace Game.Scripts
             _gameRank = characters;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <returns> string value is character rank name, int value is character rank index</returns>
         public (string, int)[] CharacterRanking()
         {
-           var gameRank = _gameRank.OrderByDescending(c => c.transform.position.z).ToList();
+            List<(string, int)> rankResult = _gameRank
+                .Where(x => x.CharacterGameCompletionInfo.Item1)
+                .OrderBy(x => x.CharacterGameCompletionInfo.Item2)
+                .Take(4)
+                .Select(characterBase => (characterBase.CharacterName, characterBase.CharacterGameCompletionInfo.Item2))
+                .ToList();
 
-            var findFinishedCharacter = gameRank.Where(character => !character.gameObject.activeInHierarchy)
-                .Where(c => c.transform.position.z > 30).ToArray();
+            if (rankResult.Count >= 4 && rankResult.Any(x => x.Item1 == _playerName))
+                return rankResult.ToArray();
 
-            foreach (var fTransform in findFinishedCharacter)
+            var raceRanking =
+                new List<CharacterBase>(_gameRank.Where(x => !x.CharacterGameCompletionInfo.Item1)
+                    .OrderByDescending(c => c.transform.position.z));
+
+            var resultCount = rankResult.Count;
+            for (int i = 0; i < raceRanking.Count; i++)
             {
-                gameRank.Remove(fTransform);
-                _finalRank.Add((fTransform.gameObject.name, _finalRank.Count + 1));
+                var character = raceRanking[i];
+                character.CharacterGameCompletionInfo =
+                    new ValueTuple<bool, int>(character.CharacterGameCompletionInfo.Item1, resultCount + 1 + i);
+
+                rankResult.Add((character.CharacterName, character.CharacterGameCompletionInfo.Item2));
             }
 
-            var result = new List<(string, int)>(_finalRank);
+            var playerRaceIndex = rankResult.FirstOrDefault(x => x.Item1 == _playerName).Item2;
 
-            foreach (var character in _gameRank) result.Add((character.gameObject.name, result.Count + 1));
 
-            var player = result.Find(c => c.Item1 == _playerName);
+            if (playerRaceIndex <= 4) return rankResult.Take(4).ToArray();
 
-            if (player.Item2 > 4)
-                result[3] = player;
+            rankResult[3] = new ValueTuple<string, int>(_playerName, playerRaceIndex);
 
-            var firstFourCharacter = result.Take(4).ToArray();
-
-            return firstFourCharacter;
+            return rankResult.ToArray();
         }
     }
 }
