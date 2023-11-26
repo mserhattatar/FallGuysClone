@@ -28,10 +28,12 @@ namespace Game.Scripts.Concretes
             ObstacleForce = 3000f;
         }
 
-        public void CreateAgent(string agentName, Vector3 startPos, Transform destinationTarget)
+        public void CreateAgent(string agentName, Vector3 startPos, Transform destinationTarget,
+            Transform parentTransform)
         {
-            OpponentName = agentName;
+            CharacterName = agentName;
             transform.position = startPos;
+            transform.SetParent(parentTransform);
             _aiDestinationSetter.target = destinationTarget;
         }
 

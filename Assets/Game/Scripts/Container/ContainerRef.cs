@@ -1,6 +1,4 @@
-using Game.Scripts.Container;
-
-namespace Game.Scripts.Manager
+namespace Game.Scripts.Container
 {
     public class ContainerRef
     {

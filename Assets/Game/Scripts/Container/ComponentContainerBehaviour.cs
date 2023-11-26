@@ -7,7 +7,6 @@ namespace Game.Scripts.Container
         private ContainerRef _containerRef;
         protected MainContainer MainContainer { get; private set; }
 
-        public ComponentContainerBehaviour ComponentContainerRef => this;
 
         public ContainerRef GetContainer()
         {

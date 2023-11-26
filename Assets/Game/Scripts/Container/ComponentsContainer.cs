@@ -28,7 +28,9 @@ namespace Game.Scripts.Manager
         {
             if (!_components.ContainsKey(componentKey))
             {
-                Debug.LogWarning("Container not contains this key = " + componentKey);
+#if UNITY_EDITOR
+                Debug.unityLogger.Log(LogType.Warning, "Container not contains this key = " + componentKey);
+#endif
                 return;
             }
 
@@ -48,29 +50,5 @@ namespace Game.Scripts.Manager
 
             return _components[componentKey].GetContainer();
         }
-
-        /*
-        public ContainerRef GetContainerComponent(Type componentType)
-        {
-            if (componentType != nameof(ComponentContainerBehaviour))
-            {
-                Debug.Log(componentType + " is not ComponentContainerBehaviour");
-            }
-
-            return GetComponent(nameof(componentType));
-        }*/
-
-        /*
-        public ContainerRef GetComponent(ComponentContainerBehaviour component)
-        {
-            if (component == null) throw new ArgumentNullException(nameof(component));
-            string componentKey = nameof(component);
-            return GetContainerComponent(componentKey);
-        }
-
-        public Dictionary<string, ComponentContainerBehaviour> GetAllComponentContainer()
-        {
-            return _components;
-        }*/
     }
 }

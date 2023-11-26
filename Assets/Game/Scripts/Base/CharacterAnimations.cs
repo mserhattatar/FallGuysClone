@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Game.Scripts.Base
@@ -8,21 +9,21 @@ namespace Game.Scripts.Base
         private static readonly int Falling = Animator.StringToHash("Falling");
         private static readonly int FallingDown = Animator.StringToHash("FallingDown");
         private static readonly int StandingUp = Animator.StringToHash("StandingUp");
-        private readonly Animator cAnimator;
-        private float lastRunSpeed;
+        private readonly Animator _cAnimator;
+        private float _lastRunSpeed;
 
         protected internal CharacterAnimations(Animator pAnimator)
         {
-            cAnimator = pAnimator;
+            _cAnimator = pAnimator;
         }
 
         protected internal void SetRun(float runSpeed)
         {
             //dont use system tolerance or int
-            if (runSpeed == lastRunSpeed)
+            if (Math.Abs(runSpeed - _lastRunSpeed) < 0.1f)
                 return;
-            lastRunSpeed = runSpeed;
-            cAnimator.SetFloat(RunSpeed, runSpeed);
+            _lastRunSpeed = runSpeed;
+            _cAnimator.SetFloat(RunSpeed, runSpeed);
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace Game.Scripts.Base
         /// </summary>
         protected internal void SetFalling(bool falling)
         {
-            cAnimator.SetBool(Falling, falling);
+            _cAnimator.SetBool(Falling, falling);
             SetStandingUp(!falling);
         }
 
@@ -39,7 +40,7 @@ namespace Game.Scripts.Base
         /// </summary>
         protected internal void SetFallingDown(bool fallingDown)
         {
-            cAnimator.SetBool(FallingDown, fallingDown);
+            _cAnimator.SetBool(FallingDown, fallingDown);
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace Game.Scripts.Base
         /// </summary>
         protected internal void SetStandingUp(bool standing)
         {
-            cAnimator.SetBool(StandingUp, standing);
+            _cAnimator.SetBool(StandingUp, standing);
         }
     }
 }

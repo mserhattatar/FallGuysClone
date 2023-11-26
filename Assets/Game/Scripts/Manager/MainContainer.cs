@@ -23,6 +23,14 @@ namespace Game.Scripts.Manager
             return _componentsContainer.GetContainerComponent(componentKey).Component;
         }
 
+        /*public void GetContainerComponent<T>(out ComponentContainerBehaviour<T> constructorArgs)
+        {
+            constructorArgs =
+                _componentsContainer.GetContainerComponent(typeof(T).Name).Component as
+                    ComponentContainerBehaviour<T>;
+        }*/
+
+
         /*public new Component GetComponent(Type componentType) =>
             _componentsContainer.GetComponent(componentType).Component;
 
