@@ -22,11 +22,14 @@ namespace Game.Scripts.Manager
 
         public override void ContainerDoAfterAwake()
         {
-            _gameSceneManager.LoadNextScene();
-
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN || UNITY_EDITOR_LINUX || UNITY_WEBGL
             Screen.SetResolution(2960, 1440, true);
 #endif
+        }
+
+        private void Start()
+        {
+            _gameSceneManager.LoadNextScene();
         }
 
         public void LevelEnded()

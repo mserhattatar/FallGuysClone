@@ -1,9 +1,12 @@
 using Game.Scripts.Container;
 
-public class LoadingCanvasController : ComponentContainerBehaviour
+namespace Game.Scripts.Controller
 {
-    public override void ContainerOnAwake()
+    public class LoadingCanvasController : ComponentContainerBehaviour
     {
-        base.ContainerOnAwake();
+        public void Set(bool setActive)
+        {
+            gameObject.SetActive(setActive);
+        }
     }
 }
