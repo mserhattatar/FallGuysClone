@@ -9,15 +9,18 @@ namespace Game.Scripts.Concretes
     public class Player : CharacterBase
     {
         private const float Speed = 5;
-        private const float RotationSpeed = 120;
+        private const float RotationSpeed = 100;
         private Joystick _joystick;
         private Action _playerFinished;
 
         private void FixedUpdate()
         {
-            if (!CanMove)
-                return;
+            if (CanMove)
+                Movement();
+        }
 
+        private void Movement()
+        {
             transform.Translate(Vector3.forward * (Time.deltaTime * Speed * _joystick.Vertical));
             transform.Rotate(Vector3.up, Time.deltaTime * RotationSpeed * _joystick.Horizontal);
         }
